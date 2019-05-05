@@ -26,6 +26,14 @@ public class ChannelRepository {
                 .getResultList();
     }
 
+    public List<Channel> findByServerId(long serverId) {
+        return em.createQuery("SELECT c FROM Server l, Channel c" +
+                " WHERE l.id = c.serverId" +
+                " AND l.id = :id", Channel.class)
+                .setParameter("id", serverId)
+                .getResultList();
+    }
+
     public void update(Channel channel) {
         em.merge(channel);
     }

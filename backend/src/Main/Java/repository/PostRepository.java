@@ -26,6 +26,14 @@ public class PostRepository {
                 .getResultList();
     }
 
+    public List<Post> getPostByChannelId(long id) {
+        return em.createQuery("SELECT p FROM Post p, Channel c" +
+                " WHERE c.id = p.channelId" +
+                " AND c.id = :id", Post.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     public void update(Post post) {
         em.merge(post);
     }
@@ -37,5 +45,10 @@ public class PostRepository {
     public void delete(long id) {
         Post postToRemove = em.find(Post.class, id);
         em.remove(postToRemove);
+    }
+
+    public void deleteBychannelId(long channelid) {
+            em.createQuery("DELETE FROM Post p WHERE p.channelId = :channel ")
+                    .setParameter("channel", channelid);
     }
 }

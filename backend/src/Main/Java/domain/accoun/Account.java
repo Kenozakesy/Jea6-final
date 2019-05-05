@@ -1,6 +1,8 @@
 package domain.accoun;
 
 import javax.persistence.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @Entity
 @NamedQueries({
@@ -10,7 +12,7 @@ import javax.persistence.*;
 public class Account {
 
     @Id
-    @Column(unique=true, nullable=false, length=128)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(unique=true, nullable=false, length=128)
@@ -23,9 +25,20 @@ public class Account {
     }
 
     public Account(AccountDTO accountDTO) {
+
+        //message hash
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        messageDigest.update(accountDTO.getPassword().getBytes());
+        String encryptedString = new String(messageDigest.digest());
+
         this.id = accountDTO.getId();
         this.name = accountDTO.getName();
-        this.password = accountDTO.getPassword();
+        this.password = encryptedString;
     }
 
 

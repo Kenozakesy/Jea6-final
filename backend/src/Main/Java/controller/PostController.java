@@ -30,16 +30,24 @@ public class PostController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Post getServer(@PathParam("id") long id)
+    public Post getPost(@PathParam("id") long id)
     {
         return postRepository.find(id);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Post> getServers()
+    public List<Post> getPosts()
     {
         return postRepository.findAll();
+    }
+
+    @GET
+    @Path("/channel/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Post> getPostsByChannel(@PathParam("id") long id)
+    {
+        return postRepository.getPostByChannelId(id);
     }
 
     @PUT

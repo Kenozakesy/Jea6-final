@@ -26,6 +26,14 @@ public class ServerRepository {
                 .getResultList();
     }
 
+    public List<Server> findByUser(long userId) {
+        return em.createQuery("SELECT l FROM Server l, AccountServer ac" +
+                " WHERE l.id = ac.serverId" +
+                " AND ac.accountId = :id", Server.class)
+                .setParameter("id", userId)
+                .getResultList();
+    }
+
     public void update(Server server) {
         em.merge(server);
     }

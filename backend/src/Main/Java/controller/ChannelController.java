@@ -1,7 +1,11 @@
 package controller;
 
+import domain.channel.Channel;
+import domain.channel.ChannelDTO;
 import domain.server.Server;
 import domain.server.ServerDTO;
+import repository.ChannelRepository;
+import repository.PostRepository;
 import repository.ServerRepository;
 
 import javax.ejb.EJB;
@@ -13,7 +17,10 @@ import java.util.List;
 @Path("/channel")
 public class ChannelController {
     @EJB
-    ServerRepository serverRepository;
+    ChannelRepository channelRepository;
+
+    @EJB
+    PostRepository postRepository;
 
     public ChannelController()
     {
@@ -29,38 +36,49 @@ public class ChannelController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Server getServer(@PathParam("id") long id)
+    public Channel getServer(@PathParam("id") long id)
     {
-        return serverRepository.find(id);
+        return channelRepository.find(id);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Server> getServers()
+    public List<Channel> getChannels()
     {
-        return serverRepository.findAll();
+        return channelRepository.findAll();
+    }
+
+    @GET
+    @Path("server/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Channel> getChannelsByServerId(@PathParam("id") long id)
+    {
+        return channelRepository.findByServerId(id);
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(ServerDTO serverDTO) {
-        Server group = new Server(serverDTO);
-        serverRepository.save(group);
-        return Response.ok().entity(group).build();
+    public Response update(ChannelDTO channelDTO) {
+        Channel channel = new Channel(channelDTO);
+        channelRepository.save(channel);
+        return Response.ok().entity(channel).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(ServerDTO serverDTO) {
-        Server group = new Server(serverDTO);
-        serverRepository.save(group);
-        return Response.ok().entity(group).build();
+    public Response save(ChannelDTO channelDTO) {
+        Channel channel = new Channel(channelDTO);
+        channelRepository.save(channel);
+        return Response.ok().entity(channel).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") long id) {
-        serverRepository.delete(id);
+            //TODO: delete all messages first (does not work correctly)
+            postRepository.deleteBychannelId(id); //Post does not delete
+            channelRepository.delete(id);
+
         return Response.ok(true).build();
     }
 }

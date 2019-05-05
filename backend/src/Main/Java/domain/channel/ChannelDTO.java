@@ -4,12 +4,20 @@ public class ChannelDTO {
 
     private long id;
     private String name;
+    private int serverId;
 
     public long getId() {
         return id;
     }
     public void setId(long id) {
         this.id = id;
+    }
+
+    public int getServerId() {
+        return serverId;
+    }
+    public void setServerId(int serverId) {
+        this.serverId = serverId;
     }
 
     public String getName() {
@@ -24,6 +32,9 @@ public class ChannelDTO {
         return "ChannelDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", serverId=" + serverId +
                 '}';
     }
+
+
 }

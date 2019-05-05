@@ -5,6 +5,8 @@ import domain.accoun.Account;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Stateless
@@ -41,9 +43,19 @@ public class AccountRepository {
     //Non standard methods
     public Account getUser(String name, String password) {
 
+        //message hash
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        messageDigest.update(password.getBytes());
+        String encryptedString = new String(messageDigest.digest());
+
         return em.createNamedQuery("login", Account.class)
                 .setParameter("name", name)
-                .setParameter("password", password)
+                .setParameter("password", encryptedString)
                 .getSingleResult();
     }
 }
