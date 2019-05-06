@@ -28,6 +28,10 @@ public class AuthenticationController {
     public Response authenticateUser(UserLogin login)
     {
         try {
+
+            //TODO: send mail here
+
+
             // Authenticate the user using the credentials provided
 
             Account account = authenticate(login.getUsername(), login.getPassword());
